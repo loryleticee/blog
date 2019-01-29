@@ -14,7 +14,7 @@ if( isset($_POST['title']) && isset($_POST['content']) && isset($_FILES)) {
     $query          = 'INSERT INTO article (`title`, `content`,`author`,`image`) VALUES (:title, :content, :author, :articleimage)';                    //-
     $statement      = $pdo->prepare($query);                                                                                                            //- 
     $status         = $statement->execute([':title' => strtoupper($title), ':content' => $content, ':author' => $author,':articleimage' => $path]);     //-
-    echo !$status   ? error_input():'';                                                                                                                 //- 
+    echo !$status   ? error_input():'<span class="badge badge-success">Article add with Success !</span>';                                                                                                                 //- 
     //--------------------------------------------------------------------------------------------------------------------------------------------------//- 
 }
 ?>

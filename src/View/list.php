@@ -2,7 +2,7 @@
     <?php
         $perPage        = 5;
         $nbrArticle     = getNbrArtcile($pdo);
-        !isset($_GET['p']) ? $cPage= 1: $cPage= $_GET['p'];
+        !isset($_GET['p']) ? $cPage= 1: $cPage= (int)strip_tags($_GET['p']);
         $articles       = getArticles($pdo,$cPage);
         if($nbrArticle && $articles){
             paginate($nbrArticle,$perPage);

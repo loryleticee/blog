@@ -1,21 +1,21 @@
 <?php
 
-function subscribe(string $pseudo,string $password,$pdo){
+function subscribe(string $pseudo,string $password,$pdo):bool
+{
     $passwordCrypt  = password_hash($password,PASSWORD_BCRYPT) ;
-            $query          = 'INSERT INTO user (`username`, `password`) VALUES (:pseudo, :pass)';
-            $statement      = $pdo->prepare($query);
-            $status         = $statement->execute([':pseudo' => $pseudo, ':pass' => $passwordCrypt]);
-            return !$status ? false : $status;
+    $query          = 'INSERT INTO user (`username`, `password`) VALUES (:pseudo, :pass)';
+    $statement      = $pdo->prepare($query);
+    $status         = $statement->execute([':pseudo' => $pseudo, ':pass' => $passwordCrypt]);
+    return !$status ? false : $status;
 }
-function ModifyArticle(string $sTitle,string $sContent,int $iArticle,$pdo){
+function ModifyArticle(string $sTitle,string $sContent,int $iArticle,$pdo):void
+{
     $title      = strip_tags($sTitle);
     $content    = strip_tags($sContent);
     $id         = strip_tags($iArticle);
     $author     = getUserId($_SESSION["connexion"],$pdo);
     //----------------------------Delete------
-    $query      = 'DELETE FROM article WHERE id=:id';
-    $statement  = $pdo->prepare($query);
-    $status     = $statement->execute([':id' => $id]);
+    deleteArticle($id,$pdo);
     //-----------------------------Insert-------
     $query      = 'INSERT INTO article (`title`, `content`,`author`) VALUES (:title, :content, :author)';
     $statement  = $pdo->prepare($query);
@@ -23,8 +23,9 @@ function ModifyArticle(string $sTitle,string $sContent,int $iArticle,$pdo){
     
 }
 //-----------------------------------------------------------------------------------
-function deleteArticle($iArticle,$pdo){
-    $id         = strip_tags($_POST['delete']);;
+function deleteArticle(int $iArticle,$pdo)
+{
+    $id         = strip_tags($iArticle);;
     $query      = 'DELETE FROM article WHERE id=:id';
     $statement  = $pdo->prepare($query);
     $status     = $statement->execute([':id' => $id]);
@@ -50,7 +51,7 @@ function getUserId(string $sPseudo,$pdo):int
     return !$aData['id'] ? false: $aData['id'];
 }
 //-----------------------------------------------------------------------------------
-function getArticle($id,$pdo):array
+function getArticle(int $id,$pdo):array
 {
     $array              =[];
     $query              = 'SELECT article.id, article.title, article.content, article.author,article.image FROM article LEFT JOIN user ON article.author=user.id WHERE article.id=:id';

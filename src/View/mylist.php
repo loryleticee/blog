@@ -3,7 +3,7 @@ if( isset($_POST['title']) && isset($_POST['content']) && isset($_POST['idArticl
     ModifyArticle($_POST['title'],$_POST['content'],$_POST['idArticle'],$pdo);
 }
 if( isset($_POST['delete']) ) {
-    deleteArticle($_POST['delete']);
+    deleteArticle($_POST['delete'],$pdo);
 }?>
 <table>
     <?php 
