@@ -134,4 +134,3 @@ function deleteCom($iCom,$pdo):bool
 
 
 
-

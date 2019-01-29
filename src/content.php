@@ -5,18 +5,18 @@
             if(isset($_GET['action'])){
             switch ($_GET['action']) {
                 case in_array($_GET['action'],['subscribe','login','logout']):
-                    include "UserController.php";
+                    include "Controller/UserController.php";
                     break;
                 case in_array($_GET['action'],['mylist','list','more','newarticle']):
-                    include "ArticleController.php";
+                    include "Controller/ArticleController.php";
                     break;
                 default:
                 exit;
-                    include "ArticleController.php";
+                    include "Controller/ArticleController.php";
                     break;
             }
         }else{
-            include "ArticleController.php";
+            include "Controller/ArticleController.php";
         }
             ?>
         </div>

@@ -1,13 +1,13 @@
 <?php
 if(isset($_SESSION['connexion'])){
 
-    require "layout.php";
+    require "Layout/layout.php";
 
 }
 
 if(!isset($_SESSION['connexion'])){
 
-    require "subsribeLayout.php";
+    require "Layout/subsribeLayout.php";
     
 }?>
 

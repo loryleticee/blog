@@ -16,6 +16,7 @@
     }
     ?>
     <head>
+        <title>My Blog</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <?php
             require "head.php"; 
@@ -28,11 +29,14 @@
     </header>
 
     <?php
-        require "function.php";
-        require "manager.php";
+        require "script/function.php";
+        require "script/manager.php";
     ?>
     <body>
         <?php
             require "content.php";
         ?>
     </body>
+        <?php
+            include "footer.php";
+        ?>

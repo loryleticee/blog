@@ -16,21 +16,21 @@ echo in_array($action,$tabAction) ? $action($pdo) : listAction($pdo); ;
 function mylistAction(object $pdo=null):void
 {
     
-    isset($_SESSION['connexion']) ? include "View/mylist.php" : include "View/list.php";
+    isset($_SESSION['connexion']) ? include "View/Article/mylist.php" : include "View/Article/list.php";
 }
 
 function moreAction(object $pdo=null):void
 {
-    include "View/details.php";
+    include "View/Article/details.php";
 }
 
 function newarticleAction(object $pdo=null):void
 {
-    isset($_SESSION['connexion']) ? include "Form/FormArticle.php" : include "View/list.php";
+    isset($_SESSION['connexion']) ? include "Form/Article/FormArticle.php" : include "View/Article/list.php";
 }
 
 function listAction(object $pdo=null):void
 {
-    include "View/list.php";
+    include "View/Article/list.php";
 }
 ?>

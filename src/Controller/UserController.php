@@ -12,15 +12,15 @@ if(!isset($_GET['action'])){
 echo $action($pdo);
 
 function subscribeAction($pdo){
-    include "Form/FormUser.php";
+    include "Form/User/FormUser.php";
 }
 
 function logoutAction($pdo){
-    include "View/disconect.php";
+    include "View/User/disconect.php";
 }
 
 function loginAction($pdo){
-    include "Form/FormConect.php";
+    include "Form/User/FormConect.php";
 }
 
 

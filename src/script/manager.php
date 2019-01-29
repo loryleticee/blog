@@ -1,4 +1,22 @@
 <?php
+function beFirstCom()
+{
+    echo  <<<'EOD'
+    <div class="alert alert-dismissible alert-info">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Be the first!</strong> There are not yet <a href="#username" class="alert-link">coment</a>, but it\'s not super important.
+    </div>
+EOD;
+}
+
+function testData($data)
+{
+    $data           = strip_tags($data);
+    $data           = stripslashes($data);
+    $data           = trim($data);
+    return $data;
+}
+
 //--------------------------------------------------------------------------------------------------
 
 function array_sort($array, $on, $order=SORT_ASC):array
@@ -38,6 +56,10 @@ function array_sort($array, $on, $order=SORT_ASC):array
 //--------------------------------------------------------------------------------------------------
 
 function error_input():void
+{
+    echo '<span class="badge badge-success">Done successfully</span>';
+}
+function great_input():void
 {
     echo "<span class='btn btn-outline-danger'>Something went wrong</span>";
 }

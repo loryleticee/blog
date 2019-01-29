@@ -1,8 +1,8 @@
  
  <?php
   if( isset($_POST['pseudo']) && isset($_POST['password'])) {
-    $pseudo         = strip_tags($_POST['pseudo']);
-    $password       = strip_tags($_POST['password']);
+    $pseudo         = testData($_POST['pseudo']);
+    $password       = testData($_POST['password']);
     $query          = 'SELECT password FROM user WHERE username =:pseudo';
     $statement      = $pdo->prepare($query);
     $statement->execute([':pseudo' => "$pseudo"]);
@@ -26,7 +26,7 @@
 <br><br><br><br>
 <div class="jumbotron">
   <div class="card-header text-center">SIGNIN</div>  
-  <form action="index.php?action=login" method="post">
+  <form action="<?php htmlspecialchars($_SERVER["PHP_SELF"])?>" method="post">
     <div class="form-group">
       <label for="pseudo" >Pseudo</label>
       <input type="text" class="form-control" id="pseudo" name="pseudo" placeholder="Tape your pseudo" required="required"  >
