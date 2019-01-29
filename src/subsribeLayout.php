@@ -10,7 +10,7 @@
         <a class="nav-link" href="./">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item text-right">
-        <a class="nav-link" href="index.php?action=subscribe">subscribe</a>
+        <a class="nav-link" href="index.php?action=subscribe">Singup</a>
       </li>
       <li class="nav-item  text-right">
         <a class="nav-link" href="index.php?action=login">Signin</a>

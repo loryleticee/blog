@@ -50,7 +50,7 @@
         <div class="container">
             <form action="index.php?action=more&id=<?=$_GET['id'];?>" method="POST" >
                 <div class="form-group row">
-                    <input type="text" name="username" id="username" required="required" placeholder="Name">
+                    <input type="text" name="username" id="username" required="required" value="<?php echo isset($_SESSION["connexion"]) ? $_SESSION["connexion"] :'';?>" placeholder="Name">
                 </div>
                 <div class="form-group row">
                     <textarea name="coment" rows="3" cols="40" required="required" placeholder="Tape something"></textarea>
