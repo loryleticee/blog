@@ -11,13 +11,13 @@
                 <tr>
                     <div class= "jumbotron" >
                         <?php
-                            echo  '<h1>'.$article['title'] .'</h1>';
+                            echo  '<h1>'.mb_strtoupper($article['title']).'</h1>';
                         ?>
                             
                             <div class="alert alert-dismissible alert-secondary">
                                 <p>
                                     <?php
-                                        echo substr($article['content'],0,250).'...';
+                                        echo mb_substr($article['content'],0,250).'...';
                                     ?>
                                 </p>
                             </div>

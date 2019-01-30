@@ -8,7 +8,19 @@ function beFirstCom()
     </div>
 EOD;
 }
-
+//--------------------------------------------------------------------------------------------------
+function testDatas(...$data):array
+{
+    foreach($data as $var){
+        $var           = strip_tags($var);
+        $var           = stripslashes($var);
+        $var           = trim($var);
+        $array[]       = $var;
+    }
+    
+    return $array;
+}
+//--------------------------------------------------------------------------------------------------
 function testData($data)
 {
     $data           = strip_tags($data);
@@ -17,9 +29,14 @@ function testData($data)
     return $data;
 }
 
+function showPseudo():string
+{
+    return mb_strstr($_SESSION["connexion"],'@',true);
+}
+
 //--------------------------------------------------------------------------------------------------
 
-function array_sort($array, $on, $order=SORT_ASC):array
+function array_sort(array $array, int $on, $order=SORT_DESC):array
 {
     $new_array = array();
     $sortable_array = array();
@@ -55,19 +72,19 @@ function array_sort($array, $on, $order=SORT_ASC):array
 }
 //--------------------------------------------------------------------------------------------------
 
-function error_input():void
+function great_input():void
 {
     echo '<span class="badge badge-success">Done successfully</span>';
 }
-function great_input():void
+function error_input():void
 {
     echo "<span class='btn btn-outline-danger'>Something went wrong</span>";
 }
-function paginate( int $iNbrArticle,int $iPerPage):void
+function paginate( int $iNbrArticle, int $iPerPage):void
 {
     $nbPage     = ceil($iNbrArticle/$iPerPage);
     for($i=1;$i<=$nbPage;$i++){?>
-        <a class="btn btn-outline-info" href="index.php?p=<?=$i?>">
+        <a class="btn btn-outline-warning" href="index.php?p=<?=$i?>">
             &nbsp;&nbsp;
             <?=$i?>
             &nbsp;&nbsp;

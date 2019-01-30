@@ -1,6 +1,4 @@
 <?php
-include "conect.php";  
-
 if(isset($_GET['action'])){
     $action = strip_tags($_GET['action']).'Action';
 }

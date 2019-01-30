@@ -1,70 +1,108 @@
 <?php
+include "conect.php"; 
+function login(string $sPseudo, string $sPassword, $pdo):array
+{
+    $status         =[];
+    $pseudo         = testData($sPseudo);
+    
+    $password       = testData($sPassword);
+    $query          = 'SELECT password FROM user WHERE username=:pseudo OR username=:pseudowithat';
+    $statement      = $pdo->prepare($query);
+    $statement->execute([':pseudo' => "$pseudo",':pseudowithat' => $pseudo.'@gmail.com']);
+    $status         = $statement->fetch(PDO::FETCH_ASSOC);
 
-function subscribe(string $pseudo,string $password,$pdo):bool
+    return !$status ? [] : $status;
+}
+//----------------------------------------------------------------------------------
+function subscribe(string $pseudo, string $password, $pdo):bool
 {
     $passwordCrypt  = password_hash($password,PASSWORD_BCRYPT) ;
     $query          = 'INSERT INTO user (`username`, `password`) VALUES (:pseudo, :pass)';
     $statement      = $pdo->prepare($query);
     $status         = $statement->execute([':pseudo' => $pseudo, ':pass' => $passwordCrypt]);
+
     return !$status ? false : $status;
 }
-function ModifyArticle(string $sTitle,string $sContent,int $iArticle,$pdo):void
+//----------------------------------------------------------------------------------
+function getImage(int $article, $pdo ):string
 {
-    $title      = strip_tags($sTitle);
-    $content    = strip_tags($sContent);
-    $id         = strip_tags($iArticle);
-    $author     = getUserId($_SESSION["connexion"],$pdo);
+    $array             = [];
+    $query             = 'SELECT article.image FROM article  WHERE article.id=:id';
+    $statement         = $pdo->prepare($query);
+    $statement->execute([':id' => (int)$article]);
+    $data = $statement->fetch(PDO::FETCH_ASSOC);
+
+    return $data['image'] === NULL  ? 'NULL' : $data['image'];
+}
+//----------------------------------------------------------------------------------
+function ModifyArticle(string $sTitle, string $sContent, int $iArticle, $pdo):bool
+{
+    $title          = strip_tags($sTitle);
+    $content        = strip_tags($sContent);
+    $id             = strip_tags($iArticle);
+    $author         = getUserId($_SESSION["connexion"],$pdo);
+
+    //----------------------------Save image------
+    $image          = getImage($id,$pdo);
     //----------------------------Delete------
     deleteArticle($id,$pdo);
     //-----------------------------Insert-------
-    $query      = 'INSERT INTO article (`title`, `content`,`author`) VALUES (:title, :content, :author)';
-    $statement  = $pdo->prepare($query);
-    $status     = $statement->execute([':title' => $title, ':content' => $content, ':author' => $author]);
-    
+    $query          = 'INSERT INTO article (`title`, `content`,`author`,`image`) VALUES (:title, :content, :author, :image)';
+    $statement      = $pdo->prepare($query);
+    $status         = $statement->execute([':title' => $title, ':content' => $content, ':author' => $author, ':image' => $image]);
+
+    return !$status ? false : $status;
 }
 //-----------------------------------------------------------------------------------
-function deleteArticle(int $iArticle,$pdo)
+function deleteArticle(int $iArticle, $pdo, bool $m= null):bool
 {
-    $id         = strip_tags($iArticle);;
-    $query      = 'DELETE FROM article WHERE id=:id';
-    $statement  = $pdo->prepare($query);
-    $status     = $statement->execute([':id' => $id]);
+    if($m == true){
+        $status     = false;
+        //Check if article is from author
+        $Authent    = getArticleByUser($iArticle, $pdo);
+    }
+    $id             = strip_tags($iArticle);
+    $query          = 'DELETE FROM article WHERE id=:id';
+    $statement      = $pdo->prepare($query);
+    $status         = $statement->execute([':id' => $id]);
+    
+    return !$status ? false : $status;
 }
 //-----------------------------------------------------------------------------------
 function getNbrArtcile($pdo):int
 {   
-    $query              = 'SELECT COUNT(article.id) as nbr FROM article ';
-    $statement          = $pdo->prepare($query);
+    $query           = 'SELECT COUNT(article.id) as nbr FROM article ';
+    $statement       = $pdo->prepare($query);
     $statement->execute();
-    $aData              = $statement->fetch(PDO::FETCH_ASSOC);
+    $data           = $statement->fetch(PDO::FETCH_ASSOC);
 
-    return $aData['nbr'] ? (int)$aData['nbr'] : 0;
+    return $data['nbr'] ? (int)$data['nbr'] : 0;
 }
 //-----------------------------------------------------------------------------------
-function getUserId(string $sPseudo,$pdo):int
+function getUserId(string $sPseudo, $pdo):int
 {   
-    $query              = 'SELECT user.id FROM user WHERE username =:pseudo';
-    $statement          = $pdo->prepare($query);
-    $statement->execute([':pseudo' => "$sPseudo"]);
-    $aData              = $statement->fetch(PDO::FETCH_ASSOC);
+    $query            = 'SELECT user.id FROM user WHERE username =:pseudo OR username=:pseudowithat';
+    $statement        = $pdo->prepare($query);
+    $statement->execute([':pseudo' => "$sPseudo",':pseudowithat' => $sPseudo.'@gmail.com']);
+    $data            = $statement->fetch(PDO::FETCH_ASSOC);
 
-    return !$aData['id'] ? false: $aData['id'];
+    return !$data['id'] ? false: $data['id'];
 }
 //-----------------------------------------------------------------------------------
-function getArticle(int $id,$pdo):array
+function getArticle(int $id, $pdo):array
 {
-    $array              =[];
-    $query              = 'SELECT article.id, article.title, article.content, article.author,article.image FROM article LEFT JOIN user ON article.author=user.id WHERE article.id=:id';
-    $statement          = $pdo->prepare($query);
+    $array             =[];
+    $query             = 'SELECT article.id, article.title, article.content, article.author,article.image FROM article LEFT JOIN user ON article.author=user.id WHERE article.id=:id';
+    $statement         = $pdo->prepare($query);
     $statement->execute([':id' => (int)$id]);
     while( $data = $statement->fetch(PDO::FETCH_ASSOC) ) {
-        $array[]        = $data;
+        $array[]       = $data;
     }
 
     return !$array ? [] : $array;
 }
 //--------------------------------------------------------------------------------------------------
-function getArticleByUser($id,$pdo):array
+function getArticleByUser($id, $pdo):array
 {
     $array              =[];
     $query              = 'SELECT article.id, article.title, article.content,article.image ,article.author FROM article LEFT JOIN user ON article.author=user.id WHERE user.id=:id';
@@ -77,7 +115,7 @@ function getArticleByUser($id,$pdo):array
     return empty($array) ? [] : $array;
 }
 //-----------------------------------------------------------------------------------
-function getArticles($pdo,int $cPage):array
+function getArticles($pdo, int $cPage):array
 {
     $array              =[];
     $perPage            = 5;
@@ -96,7 +134,7 @@ function getArticles($pdo,int $cPage):array
     return empty($array) ? [] : $array;
 }
 //--------------------------------------------------------------------------------------------------
-function getComs($article,$pdo):array
+function getComs(int $article, $pdo):array
 {
     $array              =[];
     $query              = 'SELECT commentaire.id,commentaire.username,commentaire.content FROM commentaire WHERE article =:article';
@@ -109,25 +147,24 @@ function getComs($article,$pdo):array
     
     return empty($array) ? [] : $array;
 }
-function addCom($sUsername,$sComent,$iArticle,$pdo):bool
+function addCom(string $sUsername, string $sComent, int $iArticle, $pdo):bool
 {
-    $username       = strip_tags($sUsername);
-    $coment         = strip_tags($sComent);
-    $article        = (int)strip_tags($iArticle);
-    
-    $query          = 'INSERT INTO commentaire (`username`, `content`,`article`) VALUES (:username, :coment, :article)';
-    $statement      = $pdo->prepare($query);
-    $status         = $statement->execute([':username' => $username, ':coment' => $coment, ':article' => $article]);
+    $username           = testData($sUsername);
+    $coment             = strip_tags($sComent);
+    $article            = (int)testData($iArticle);
+    $query              = 'INSERT INTO commentaire (`username`, `content`,`article`) VALUES (:username, :coment, :article)';
+    $statement          = $pdo->prepare($query);
+    $status             = $statement->execute([':username' => $username, ':coment' => $coment, ':article' => $article]);
 
     return !$status ? false : $status;
 }
-function deleteCom($iCom,$pdo):bool
+function deleteCom($iCom, $pdo):bool
 {
-    $article        = (int)strip_tags($iCom);
+    $article            = (int)strip_tags($iCom);
     
-    $query          = 'DELETE FROM commentaire WHERE commentaire.id=:id';
-    $statement      = $pdo->prepare($query);
-    $status         = $statement->execute([':id' => $article]);
+    $query              = 'DELETE FROM commentaire WHERE commentaire.id=:id';
+    $statement          = $pdo->prepare($query);
+    $status             = $statement->execute([':id' => $article]);
 
     return !$status ? false : $status;
 }

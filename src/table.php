@@ -15,7 +15,7 @@
 <?php       $tab = array_sort($tab,$on,SORT_ASC);
 
             foreach($tab as $value):
-                if(substr($value['email'],-3,3) != "com"):
+                if(mb_substr($value['email'],-3,3) != "com"):
                     continue;
                 endif;
 ?>

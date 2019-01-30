@@ -1,10 +1,13 @@
 <?php
 if( isset($_POST['title']) && isset($_POST['content']) && isset($_POST['idArticle'])) {
-    ModifyArticle($_POST['title'],$_POST['content'],$_POST['idArticle'],$pdo);
+    $data        = ModifyArticle($_POST['title'],$_POST['content'],$_POST['idArticle'],$pdo);
+    $data        ? great_input() : false ;
 }
 if( isset($_POST['delete']) ) {
-    deleteArticle($_POST['delete'],$pdo);
+    $data        = deleteArticle($_POST['delete'],$pdo,true);
+    $data        ? great_input() : false ;
 }?>
+<div class="alert alert-dismissible alert-primary">
 <table>
     <?php 
     $author     = getUserId($_SESSION["connexion"],$pdo);
@@ -12,11 +15,12 @@ if( isset($_POST['delete']) ) {
     if($articles){
        foreach($articles as $data) {?>
             <tr>
+            <p><img width='100' heigth='100' src="<?=$data['image']?>" /> </p>
                 <form action="index.php?action=mylist" method="POST">
-                    <input type="text" name="title" value=<?php echo $data['title'];?>>
+                    <input type="text" class="alert alert-dismissible alert-secondary" name="title" size="65" value="<?php echo $data['title'];?>">
                     <br>
                     <input type="hidden" name="idArticle" value=<?php echo $data['id'];?>>
-                    <textarea name="content" rows="15" cols="90" required="required"><?php echo $data['content'];?></textarea>
+                    <textarea name="content" rows="15" cols="73" required="required"><?php echo $data['content'];?></textarea>
                     <button class="btn btn-info" type="submit">Save</button>
                 </form>
                 <form action="index.php?action=mylist" method="POST">
@@ -34,3 +38,4 @@ if( isset($_POST['delete']) ) {
         </div><?php  
     }?>
 </table>
+</div>

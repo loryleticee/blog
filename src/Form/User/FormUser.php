@@ -28,10 +28,10 @@
         <div class="form-group">
             <label for="password"> Password  </label>
             <input class="form-control" id="password" type="password" name="password" pattern=.{8,} placeholder="Tape a password" required="required">
-            <small id="passwordHelp" class="form-text text-muted">We provide more than eight chars</small>
+            <small id="passwordHelp" class="form-text text-muted text-danger"><p class="text-danger">We provide more than eight chars</p></small>
             <small id="passwordHelp" class="form-text text-muted">We'll never share your password with anyone else.</small>
         </div>
-        <button class="btn btn-success" type="submit">Sign in</button>
+        <button class="btn btn-success" type="submit">Sign up !</button>
     </form> 
 </div>   
 
